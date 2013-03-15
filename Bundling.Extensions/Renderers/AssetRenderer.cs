@@ -1,36 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
-using System.Web.Hosting;
-using System.Web.Optimization;
-
-namespace Bundling.Extensions.Renderers
+﻿namespace Bundling.Extensions.Renderers
 {
-    public static class AssetRenderer
-    {
+	using System;
+	using System.IO;
+	using System.Linq;
+	using System.Text;
+	using System.Web;
+	using System.Web.Hosting;
+	using System.Web.Optimization;
 
+	public static class AssetRenderer
+    {
         private static HttpContextBase context;
 
         internal static HttpContextBase Context
         {
             get
             {
-                return context ?? (HttpContextBase)new HttpContextWrapper(HttpContext.Current);
+                return context ?? new HttpContextWrapper(HttpContext.Current);
             }
+
             set
             {
                 context = value;
             }
         }
 
-        public static IHtmlString Render(string tagFormat, string path)
+        public static IHtmlString Render(string tagFormat, string path, int indent)
         {
             var bundle = BundleTable.Bundles.FirstOrDefault(b => b.Path == path);
-            StringBuilder stringBuilder = new StringBuilder();
+            var stringBuilder = new StringBuilder();
 
             if (bundle != null)
             {
@@ -58,7 +56,7 @@ namespace Bundling.Extensions.Renderers
                 }
             }
 
-            return (IHtmlString)new HtmlString(((object)stringBuilder).ToString());
+            return new HtmlString(stringBuilder.ToString());
         }
 
         private static string GetTimeStamp(Bundle bundle, BundleContext bundleContext)
@@ -66,9 +64,8 @@ namespace Bundling.Extensions.Renderers
             var lastdate = DateTime.MinValue;
             foreach (var file in bundle.EnumerateFiles(bundleContext))
             {
-                //VirtualPathUtility.
                 var mappedPath = HostingEnvironment.MapPath(file.IncludedVirtualPath);
-                if (File.Exists(mappedPath))
+				if (mappedPath != null && File.Exists(mappedPath))
                 {
                     var fileDate = File.GetLastWriteTime(mappedPath);
                     if (fileDate > lastdate)
@@ -80,6 +77,5 @@ namespace Bundling.Extensions.Renderers
 
             return lastdate.ToString("yyyyMMddHHmmss");
         }
-    
     }
 }

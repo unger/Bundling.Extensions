@@ -1,23 +1,21 @@
-﻿using Bundling.Extensions.Renderers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Optimization;
-using System.Web.UI;
-
-namespace Bundling.Extensions.Controls
+﻿namespace Bundling.Extensions.Controls
 {
-    public class ScriptBundle : Control
+	using System.Web.UI;
+
+	using Bundling.Extensions.Helpers;
+	using Bundling.Extensions.Renderers;
+
+	public class ScriptBundle : Control
     {
-        public string Path { get; set; }
+		public string Path { get; set; }
 
         protected override void Render(HtmlTextWriter writer)
         {
-            base.Render(writer);
-
-            writer.Write(ScriptRenderer.Render(Path).ToHtmlString());
+			Assert.ArgumentNotNull(this.Path, "Path");
+			
+			base.Render(writer);
+			
+			writer.Write(new ScriptRenderer().Render(this.Path, writer.Indent).ToHtmlString());
         }
-
     }
 }

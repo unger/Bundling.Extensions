@@ -1,28 +1,29 @@
-﻿using Bundling.Extensions.Helpers;
-using dotless.Core;
-using dotless.Core.Abstractions;
-using dotless.Core.Importers;
-using dotless.Core.Loggers;
-using dotless.Core.Parser;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Hosting;
-using System.Web.Optimization;
-
-namespace Bundling.Extensions.Transforms
+﻿namespace Bundling.Extensions.Transforms
 {
-    public class LessTransform : IBundleTransform
+	using System;
+	using System.Collections.Generic;
+	using System.IO;
+	using System.Linq;
+	using System.Text;
+	using System.Web.Hosting;
+	using System.Web.Optimization;
+
+	using Bundling.Extensions.Helpers;
+
+	using dotless.Core;
+	using dotless.Core.Abstractions;
+	using dotless.Core.Importers;
+	using dotless.Core.Loggers;
+	using dotless.Core.Parser;
+
+	public class LessTransform : IBundleTransform
     {
         public void Process(BundleContext context, BundleResponse bundle)
         {
             context.HttpContext.Response.Cache.SetLastModifiedFromFileDependencies();
 
             var lessParser = new Parser();
-            ILessEngine lessEngine = CreateLessEngine(lessParser);
+            ILessEngine lessEngine = this.CreateLessEngine(lessParser);
 
             var content = new StringBuilder();
 
@@ -35,10 +36,10 @@ namespace Bundling.Extensions.Transforms
 
                 if (BundleTable.EnableOptimizations)
                 {
-                    var ext = Path.GetExtension(bundleFile.VirtualFile.VirtualPath).ToLower();
-                    if (ext == ".less")
+                    var ext = Path.GetExtension(bundleFile.VirtualFile.VirtualPath);
+					if (ext != null && ext.Equals(".less", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        var minimizedFileName = string.Format("{0}.min.css", bundleFile.VirtualFile.VirtualPath.Substring(0, bundleFile.VirtualFile.VirtualPath.LastIndexOf(ext)));
+                        var minimizedFileName = string.Format("{0}.min.css", bundleFile.VirtualFile.VirtualPath.Substring(0, bundleFile.VirtualFile.VirtualPath.LastIndexOf(ext, StringComparison.Ordinal)));
                         var virtualPathProvider = HostingEnvironment.VirtualPathProvider;
                         if (virtualPathProvider.FileExists(minimizedFileName))
                         {
@@ -57,14 +58,14 @@ namespace Bundling.Extensions.Transforms
 
                 if (!foundMinimizedVersion)
                 {
-                    SetCurrentFilePath(lessParser, bundleFile.VirtualFile.VirtualPath);
+                    this.SetCurrentFilePath(lessParser, bundleFile.VirtualFile.VirtualPath);
 
                     using (var reader = new StreamReader(VirtualPathProvider.OpenFile(bundleFile.VirtualFile.VirtualPath)))
                     {
                         content.Append(lessEngine.TransformToCss(reader.ReadToEnd(), bundleFile.VirtualFile.VirtualPath));
                         content.AppendLine();
 
-                        bundleFiles.AddRange(GetFileDependencies(lessParser).Select(f => new BundleFile(f.VirtualPath, f)));
+                        bundleFiles.AddRange(this.GetFileDependencies(lessParser).Select(f => new BundleFile(f.VirtualPath, f)));
                     }
                 }
             }
@@ -79,24 +80,15 @@ namespace Bundling.Extensions.Transforms
             bundle.Content = content.ToString();
         }
 
-        /// <summary>
-        /// Creates an instance of LESS engine.
-        /// </summary>
-        /// <param name="lessParser">The LESS parser.</param>
         private ILessEngine CreateLessEngine(Parser lessParser)
         {
             var logger = new AspNetTraceLogger(LogLevel.Debug, new Http());
             return new LessEngine(lessParser, logger, false, false);
         }
 
-        /// <summary>
-        /// Gets the file dependencies (@imports) of the LESS file being parsed.
-        /// </summary>
-        /// <param name="lessParser">The LESS parser.</param>
-        /// <returns>An array of file references to the dependent file references.</returns>
         private IEnumerable<VirtualFile> GetFileDependencies(Parser lessParser)
         {
-            var pathResolver = GetPathResolver(lessParser);
+            var pathResolver = this.GetPathResolver(lessParser);
 
             foreach (var importPath in lessParser.Importer.Imports)
             {
@@ -106,30 +98,30 @@ namespace Bundling.Extensions.Transforms
             lessParser.Importer.Imports.Clear();
         }
 
-        /// <summary>
-        /// Returns an <see cref="IPathResolver"/> instance used by the specified LESS lessParser.
-        /// </summary>
-        /// <param name="lessParser">The LESS parser.</param>
         private dotless.Core.Input.IPathResolver GetPathResolver(Parser lessParser)
         {
             var importer = lessParser.Importer as Importer;
-            var fileReader = importer.FileReader as Bundling.Extensions.Helpers.VirtualFileReader;
+	        if (importer != null)
+	        {
+		        var fileReader = importer.FileReader as VirtualFileReader;
 
-            return fileReader.PathResolver;
+		        if (fileReader != null)
+		        {
+			        return fileReader.PathResolver;
+		        }
+	        }
+
+	        return null;
         }
 
-        /// <summary>
-        /// Informs the LESS parser about the path to the currently processed file. 
-        /// This is done by using a custom <see cref="IPathResolver"/> implementation.
-        /// </summary>
-        /// <param name="lessParser">The LESS parser.</param>
-        /// <param name="currentFilePath">The path to the currently processed file.</param>
         private void SetCurrentFilePath(Parser lessParser, string currentFilePath)
         {
             var importer = lessParser.Importer as Importer;
 
             if (importer == null)
-                throw new InvalidOperationException("Unexpected dotless importer type.");
+            {
+				throw new InvalidOperationException("Unexpected dotless importer type.");
+            }
 
             var fileReader = importer.FileReader as VirtualFileReader;
 

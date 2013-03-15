@@ -1,21 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
-using System.Web.Routing;
-
-namespace Bundling.Extensions.Handlers
+﻿namespace Bundling.Extensions.Handlers
 {
-    public class BundleRouteHandler : IRouteHandler
+	using System.Web;
+	using System.Web.Routing;
+
+	public class BundleRouteHandler : IRouteHandler
     {
         public IHttpHandler GetHttpHandler(RequestContext requestContext)
         {
-            var jsHandler = new BundleHttpHandler();
+            var bundleHandler = new BundleHttpHandler();
             requestContext.HttpContext.Items["RouteData"] = requestContext.RouteData;
 
-            return jsHandler;
+            return bundleHandler;
         }
     }
 }

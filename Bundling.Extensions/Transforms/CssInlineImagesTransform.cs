@@ -1,34 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Web;
-using System.Web.Hosting;
-using System.Web.Optimization;
-
-namespace Bundling.Extensions.Transforms
+﻿namespace Bundling.Extensions.Transforms
 {
-    public class CssInlineImagesTransform : IBundleTransform
-    {
-        private static readonly Regex url = new Regex(@"url\((([^\)]*)\?embed)\)", RegexOptions.Singleline);
-        private const string format = "url(data:image/{0};base64,{1})";
+	using System;
+	using System.IO;
+	using System.Text.RegularExpressions;
+	using System.Web;
+	using System.Web.Hosting;
+	using System.Web.Optimization;
 
-        public void Process(BundleContext context, BundleResponse response)
+	public class CssInlineImagesTransform : IBundleTransform
+    {
+		private const string Format = "url(data:image/{0};base64,{1})";
+
+		private static readonly Regex Url = new Regex(@"url\((([^\)]*)\?embed)\)", RegexOptions.Singleline);
+
+		public void Process(BundleContext context, BundleResponse response)
         {
             HttpContext.Current.Response.Cache.SetLastModifiedFromFileDependencies();
 
-            foreach (Match match in url.Matches(response.Content))
+            foreach (Match match in Url.Matches(response.Content))
             {
-                var file = new FileInfo(HostingEnvironment.MapPath(match.Groups[2].Value));
-                if (file.Exists)
-                {
-                    string dataUri = GetDataUri(file);
-                    response.Content = response.Content.Replace(match.Value, dataUri);
-                    HttpContext.Current.Response.AddFileDependency(file.FullName);
-                }
+	            var filename = HostingEnvironment.MapPath(match.Groups[2].Value);
+				if (filename != null)
+				{
+					var file = new FileInfo(filename);
+					if (file.Exists)
+					{
+						string dataUri = this.GetDataUri(file);
+						response.Content = response.Content.Replace(match.Value, dataUri);
+						HttpContext.Current.Response.AddFileDependency(file.FullName);
+					}
+				}
             }
         }
 
@@ -36,7 +37,7 @@ namespace Bundling.Extensions.Transforms
         {
             byte[] buffer = File.ReadAllBytes(file.FullName);
             string ext = file.Extension.Substring(1);
-            return string.Format(format, ext, Convert.ToBase64String(buffer));
+            return string.Format(Format, ext, Convert.ToBase64String(buffer));
         }
     }
 }

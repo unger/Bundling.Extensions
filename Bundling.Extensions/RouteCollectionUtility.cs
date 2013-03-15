@@ -1,25 +1,20 @@
-﻿using Bundling.Extensions.Handlers;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
-using System.Web.Optimization;
-using System.Web.Routing;
-
-namespace Bundling.Extensions
+﻿namespace Bundling.Extensions
 {
-    public static class RouteCollectionUtility
+	using System.Web;
+	using System.Web.Optimization;
+	using System.Web.Routing;
+
+	using Bundling.Extensions.Handlers;
+
+	public static class RouteCollectionUtility
     {
         public static void AddBundleRoutes(this RouteCollection collection)
         {
             foreach (var bundle in BundleTable.Bundles)
             {
-                var route = VirtualPathUtility.ToAbsolute(bundle.Path).Trim(new char[] {'/'});
+	            var route = VirtualPathUtility.ToAbsolute(bundle.Path).Trim(new[] { '/' });
 
-                collection.Add(new Route(route + "/{timestamp}/{*filepath}", new BundleRouteHandler()));
+	            collection.Add(new Route(route + "/{timestamp}/{*filepath}", new BundleRouteHandler()));
             }
         }
     }

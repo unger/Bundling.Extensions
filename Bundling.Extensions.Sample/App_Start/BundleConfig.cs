@@ -1,21 +1,19 @@
-﻿using Bundling.Extensions;
-using Bundling.Extensions.Handlers;
-using Bundling.Extensions.Transforms;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Optimization;
-using System.Web.Routing;
-using TypeScriptBundleTransform;
+﻿[assembly: WebActivatorEx.PostApplicationStartMethod(typeof(BundlingTest.App_Start.BundleConfig), "RegisterBundles")]
 
-namespace BundlingTest
+namespace BundlingTest.App_Start
 {
-    public class BundleConfig
-    {
+	using System.Web.Optimization;
+	using System.Web.Routing;
 
-        public static void RegisterBundles(BundleCollection bundles)
+	using Bundling.Extensions;
+	using Bundling.Extensions.Transforms;
+
+	public class BundleConfig
+    {
+        public static void RegisterBundles()
         {
+	        var bundles = BundleTable.Bundles;
+
             var cssBundle = new Bundle("~/bundles/css");
             cssBundle.Include("~/Content/less/bootstrap.less");
             cssBundle.Include("~/css/main.less");
@@ -27,8 +25,10 @@ namespace BundlingTest
 
             var scriptBundle = new Bundle("~/bundles/js");
             scriptBundle.Include("~/js/lib/jquery-1.9.1.js");
-            //scriptBundle.Include("~/js/main.ts");
-            //scriptBundle.Transforms.Add(new TypeScriptTransformer());
+			/*
+            scriptBundle.Include("~/js/main.ts");
+            scriptBundle.Transforms.Add(new TypeScriptTransformer());
+			*/
 
 #if !DEBUG
             var cssMin = new YuiCssMinify();

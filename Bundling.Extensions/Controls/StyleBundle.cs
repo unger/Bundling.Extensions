@@ -1,23 +1,21 @@
-﻿using Bundling.Extensions.Renderers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Optimization;
-using System.Web.UI;
-
-namespace Bundling.Extensions.Controls
+﻿namespace Bundling.Extensions.Controls
 {
-    public class StyleBundle : Control
+	using System.Web.UI;
+
+	using Bundling.Extensions.Helpers;
+	using Bundling.Extensions.Renderers;
+
+	public class StyleBundle : Control
     {
         public string Path { get; set; }
 
         protected override void Render(HtmlTextWriter writer)
         {
-            base.Render(writer);
+			Assert.ArgumentNotNull(this.Path, "Path");
+			
+			base.Render(writer);
 
-            writer.Write(StylesRenderer.Render(Path).ToHtmlString());
+			writer.Write(new StylesRenderer().Render(this.Path, writer.Indent).ToHtmlString());
         }
-
     }
 }

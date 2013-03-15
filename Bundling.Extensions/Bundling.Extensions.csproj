@@ -70,9 +70,11 @@
     <Compile Include="Controls\StyleBundle.cs" />
     <Compile Include="Handlers\BundleRouteHandler.cs" />
     <Compile Include="Handlers\BundleHttpHandler.cs" />
+    <Compile Include="Helpers\Assert.cs" />
     <Compile Include="Helpers\VirtualPathResolver.cs" />
     <Compile Include="Helpers\VirtualFileReader.cs" />
     <Compile Include="Renderers\AssetRenderer.cs" />
+    <Compile Include="Renderers\BaseRenderer.cs" />
     <Compile Include="Renderers\StylesRenderer.cs" />
     <Compile Include="Renderers\ScriptRenderer.cs" />
     <Compile Include="RouteCollectionUtility.cs" />
