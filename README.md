@@ -3,6 +3,34 @@ Bundling.Extensions
 
 Extensions for Microsoft ASP.NET Web Optimization Framework (System.Web.Optimization)
 
+##Usage
+
+Register bundles as usual
+
+	var cssBundle = new Bundle("~/bundles/css");
+    cssBundle.Include("~/css/styles1.css");
+	cssBundle.Include("~/css/styles2.css");
+    // Add transforms here
+    BundleTable.Bundles.Add(cssBundle);
+
+To override bundle url generation call this after you added your bundles to the BundleTable.Bundles
+
+    RouteTable.Routes.AddBundleRoutes();
+
+This will generate urls with a timestamp in the bundle url instead like this
+
+    <link href="/bundles/css/20130315191550" rel="stylesheet"/>
+
+and in debug mode (BundleTable.EnableOptimizations = false)
+
+    <link href="/bundles/css/20130315191550/css/styles1.css" rel="stylesheet"/>
+    <link href="/bundles/css/20130315191550/css/styles2.css" rel="stylesheet"/>
+
+the timestamp is for the last edited file of the included files
+
+NOTE: Transformation is also applied in debug mode
+
+
 ##License
 
     Copyright (C) 2013 Magnus Unger
