@@ -1,4 +1,8 @@
-﻿[assembly: WebActivatorEx.PostApplicationStartMethod(typeof(BundlingTest.App_Start.BundleConfig), "RegisterBundles")]
+﻿using BundlingTest.App_Start;
+
+using WebActivatorEx;
+
+[assembly: PostApplicationStartMethod(typeof(BundleConfig), "RegisterBundles")]
 
 namespace BundlingTest.App_Start
 {
@@ -9,38 +13,42 @@ namespace BundlingTest.App_Start
 	using Bundling.Extensions.Transforms;
 
 	public class BundleConfig
-    {
-        public static void RegisterBundles()
-        {
-	        var bundles = BundleTable.Bundles;
+	{
+		#region Public Methods and Operators
 
-            var cssBundle = new Bundle("~/bundles/css");
-            cssBundle.Include("~/Content/less/bootstrap.less");
-            cssBundle.Include("~/css/main.less");
-            cssBundle.Transforms.Add(new LessTransform());
-            cssBundle.Transforms.Add(new CssInlineImagesTransform());
+		public static void RegisterBundles()
+		{
+			BundleCollection bundles = BundleTable.Bundles;
 
-            var modernizrBundle = new Bundle("~/bundles/modernizr");
-            modernizrBundle.Include("~/js/lib/modernizr-2.6.2.js");
+			var cssBundle = new Bundle("~/bundles/css");
+			cssBundle.Include("~/Content/less/bootstrap.less");
+			cssBundle.Include("~/css/main.less");
+			cssBundle.Transforms.Add(new LessTransform());
+			cssBundle.Transforms.Add(new CssInlineImagesTransform());
 
-            var scriptBundle = new Bundle("~/bundles/js");
-            scriptBundle.Include("~/js/lib/jquery-1.9.1.js");
+			var modernizrBundle = new Bundle("~/bundles/modernizr");
+			modernizrBundle.Include("~/js/lib/modernizr-2.6.2.js");
+
+			var scriptBundle = new Bundle("~/bundles/js");
+			scriptBundle.Include("~/js/lib/jquery-1.9.1.js");
 
 #if !DEBUG
-            var cssMin = new YuiCssMinify();
-            var jsMin = new YuiJsMinify();
+			var cssMin = new YuiCssMinify();
+			var scriptMin = new YuiJsMinify();
 
-            cssBundle.Transforms.Add(cssMin);
-            modernizrBundle.Transforms.Add(jsMin);
-            scriptBundle.Transforms.Add(jsMin);
-            BundleTable.EnableOptimizations = true;
+			cssBundle.Transforms.Add(cssMin);
+			modernizrBundle.Transforms.Add(scriptMin);
+			scriptBundle.Transforms.Add(scriptMin);
+			BundleTable.EnableOptimizations = true;
 #endif
 
-            bundles.Add(cssBundle);
-            bundles.Add(modernizrBundle);
-            bundles.Add(scriptBundle);
+			bundles.Add(cssBundle);
+			bundles.Add(modernizrBundle);
+			bundles.Add(scriptBundle);
 
-            RouteTable.Routes.AddBundleRoutes();
-        }
-    }
+			RouteTable.Routes.AddBundleRoutes();
+		}
+
+		#endregion
+	}
 }

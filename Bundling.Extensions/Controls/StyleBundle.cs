@@ -6,16 +6,16 @@
 	using Bundling.Extensions.Renderers;
 
 	public class StyleBundle : Control
-    {
-        public string Path { get; set; }
+	{
+		public string Path { get; set; }
 
-        protected override void Render(HtmlTextWriter writer)
-        {
+		protected override void Render(HtmlTextWriter writer)
+		{
 			Assert.ArgumentNotNull(this.Path, "Path");
-			
+
 			base.Render(writer);
 
 			writer.Write(new StylesRenderer().Render(this.Path, writer.Indent).ToHtmlString());
-        }
-    }
+		}
+	}
 }

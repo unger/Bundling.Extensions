@@ -17,131 +17,134 @@
 	using dotless.Core.Parser;
 
 	public class LessTransform : IBundleTransform
-    {
-        public void Process(BundleContext context, BundleResponse bundle)
-        {
-            context.HttpContext.Response.Cache.SetLastModifiedFromFileDependencies();
+	{
+		public void Process(BundleContext context, BundleResponse bundle)
+		{
+			context.HttpContext.Response.Cache.SetLastModifiedFromFileDependencies();
 
-            var lessParser = new Parser();
-            ILessEngine lessEngine = this.CreateLessEngine(lessParser);
+			var lessParser = new Parser();
+			ILessEngine lessEngine = this.CreateLessEngine(lessParser);
 
-            var content = new StringBuilder();
+			var content = new StringBuilder();
 
-            var bundleFiles = new List<BundleFile>();
+			var bundleFiles = new List<BundleFile>();
 
-            foreach (var bundleFile in bundle.Files)
-            {
-                bool foundMinimizedVersion = false;
-                bundleFiles.Add(bundleFile);
+			foreach (var bundleFile in bundle.Files)
+			{
+				bool foundMinimizedVersion = false;
+				bundleFiles.Add(bundleFile);
 
-                if (BundleTable.EnableOptimizations)
-                {
-                    var ext = Path.GetExtension(bundleFile.VirtualFile.VirtualPath);
+				if (BundleTable.EnableOptimizations)
+				{
+					var ext = Path.GetExtension(bundleFile.VirtualFile.VirtualPath);
 					if (ext != null && ext.Equals(".less", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        var minimizedFileName = string.Format("{0}.min.css", bundleFile.VirtualFile.VirtualPath.Substring(0, bundleFile.VirtualFile.VirtualPath.LastIndexOf(ext, StringComparison.Ordinal)));
-                        var virtualPathProvider = HostingEnvironment.VirtualPathProvider;
-                        if (virtualPathProvider.FileExists(minimizedFileName))
-                        {
-                            var minimizedFile = virtualPathProvider.GetFile(minimizedFileName);
-                            foundMinimizedVersion = true;
-                            using (var reader = new StreamReader(minimizedFile.Open()))
-                            {
-                                content.Append(reader.ReadToEnd());
-                                content.AppendLine();
+					{
+						var filepath = bundleFile.VirtualFile.VirtualPath;
+						var minimizedFileName = string.Format(
+							"{0}.min.css",
+							filepath.Substring(0, filepath.LastIndexOf(ext, StringComparison.Ordinal)));
+						var virtualPathProvider = HostingEnvironment.VirtualPathProvider;
+						if (virtualPathProvider.FileExists(minimizedFileName))
+						{
+							var minimizedFile = virtualPathProvider.GetFile(minimizedFileName);
+							foundMinimizedVersion = true;
+							using (var reader = new StreamReader(minimizedFile.Open()))
+							{
+								content.Append(reader.ReadToEnd());
+								content.AppendLine();
 
-                                bundleFiles.Add(new BundleFile(minimizedFile.VirtualPath, minimizedFile));
-                            }
-                        }
-                    }
-                }
+								bundleFiles.Add(new BundleFile(minimizedFile.VirtualPath, minimizedFile));
+							}
+						}
+					}
+				}
 
-                if (!foundMinimizedVersion)
-                {
-                    this.SetCurrentFilePath(lessParser, bundleFile.VirtualFile.VirtualPath);
+				if (!foundMinimizedVersion)
+				{
+					this.SetCurrentFilePath(lessParser, bundleFile.VirtualFile.VirtualPath);
 
-                    using (var reader = new StreamReader(VirtualPathProvider.OpenFile(bundleFile.VirtualFile.VirtualPath)))
-                    {
-                        content.Append(lessEngine.TransformToCss(reader.ReadToEnd(), bundleFile.VirtualFile.VirtualPath));
-                        content.AppendLine();
+					using (var reader = new StreamReader(VirtualPathProvider.OpenFile(bundleFile.VirtualFile.VirtualPath)))
+					{
+						content.Append(lessEngine.TransformToCss(reader.ReadToEnd(), bundleFile.VirtualFile.VirtualPath));
+						content.AppendLine();
 
-                        bundleFiles.AddRange(this.GetFileDependencies(lessParser).Select(f => new BundleFile(f.VirtualPath, f)));
-                    }
-                }
-            }
+						bundleFiles.AddRange(this.GetFileDependencies(lessParser).Select(f => new BundleFile(f.VirtualPath, f)));
+					}
+				}
+			}
 
-            if (BundleTable.EnableOptimizations)
-            {
-                // include imports in bundle files to register cache dependencies
-                bundle.Files = bundleFiles.Distinct().ToList();
-            }
+			if (BundleTable.EnableOptimizations)
+			{
+				// include imports in bundle files to register cache dependencies
+				bundle.Files = bundleFiles.Distinct().ToList();
+			}
 
-            bundle.ContentType = "text/css";
-            bundle.Content = content.ToString();
-        }
+			bundle.ContentType = "text/css";
+			bundle.Content = content.ToString();
+		}
 
-        private ILessEngine CreateLessEngine(Parser lessParser)
-        {
-            var logger = new AspNetTraceLogger(LogLevel.Debug, new Http());
-            return new LessEngine(lessParser, logger, false, false);
-        }
+		private ILessEngine CreateLessEngine(Parser lessParser)
+		{
+			var logger = new AspNetTraceLogger(LogLevel.Debug, new Http());
+			return new LessEngine(lessParser, logger, false, false);
+		}
 
-        private IEnumerable<VirtualFile> GetFileDependencies(Parser lessParser)
-        {
-            var pathResolver = this.GetPathResolver(lessParser);
+		private IEnumerable<VirtualFile> GetFileDependencies(Parser lessParser)
+		{
+			var pathResolver = this.GetPathResolver(lessParser);
 
-            foreach (var importPath in lessParser.Importer.Imports)
-            {
-                yield return HostingEnvironment.VirtualPathProvider.GetFile(pathResolver.GetFullPath(importPath));
-            }
+			foreach (var importPath in lessParser.Importer.Imports)
+			{
+				yield return HostingEnvironment.VirtualPathProvider.GetFile(pathResolver.GetFullPath(importPath));
+			}
 
-            lessParser.Importer.Imports.Clear();
-        }
+			lessParser.Importer.Imports.Clear();
+		}
 
-        private dotless.Core.Input.IPathResolver GetPathResolver(Parser lessParser)
-        {
-            var importer = lessParser.Importer as Importer;
-	        if (importer != null)
-	        {
-		        var fileReader = importer.FileReader as VirtualFileReader;
+		private dotless.Core.Input.IPathResolver GetPathResolver(Parser lessParser)
+		{
+			var importer = lessParser.Importer as Importer;
+			if (importer != null)
+			{
+				var fileReader = importer.FileReader as VirtualFileReader;
 
-		        if (fileReader != null)
-		        {
-			        return fileReader.PathResolver;
-		        }
-	        }
+				if (fileReader != null)
+				{
+					return fileReader.PathResolver;
+				}
+			}
 
-	        return null;
-        }
+			return null;
+		}
 
-        private void SetCurrentFilePath(Parser lessParser, string currentFilePath)
-        {
-            var importer = lessParser.Importer as Importer;
+		private void SetCurrentFilePath(Parser lessParser, string currentFilePath)
+		{
+			var importer = lessParser.Importer as Importer;
 
-            if (importer == null)
-            {
+			if (importer == null)
+			{
 				throw new InvalidOperationException("Unexpected dotless importer type.");
-            }
+			}
 
-            var fileReader = importer.FileReader as VirtualFileReader;
+			var fileReader = importer.FileReader as VirtualFileReader;
 
-            if (fileReader == null)
-            {
-                importer.FileReader = new VirtualFileReader(new VirtualPathResolver(currentFilePath));
-            }
-            else
-            {
-                var pathResolver = fileReader.PathResolver as VirtualPathResolver;
+			if (fileReader == null)
+			{
+				importer.FileReader = new VirtualFileReader(new VirtualPathResolver(currentFilePath));
+			}
+			else
+			{
+				var pathResolver = fileReader.PathResolver as VirtualPathResolver;
 
-                if (pathResolver == null)
-                {
-                    fileReader.PathResolver = new VirtualPathResolver(currentFilePath);
-                }
-                else
-                {
-                    pathResolver.CurrentFilePath = currentFilePath;
-                }
-            }
-        }
-    }
+				if (pathResolver == null)
+				{
+					fileReader.PathResolver = new VirtualPathResolver(currentFilePath);
+				}
+				else
+				{
+					pathResolver.CurrentFilePath = currentFilePath;
+				}
+			}
+		}
+	}
 }

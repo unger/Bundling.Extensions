@@ -80,7 +80,7 @@
     <Compile Include="Renderers\BaseRenderer.cs" />
     <Compile Include="Renderers\StylesRenderer.cs" />
     <Compile Include="Renderers\ScriptRenderer.cs" />
-    <Compile Include="RouteCollectionUtility.cs" />
+    <Compile Include="RouteCollectionExtensions.cs" />
     <Compile Include="Transforms\CssInlineImagesTransform.cs" />
     <Compile Include="Transforms\LessTransform.cs" />
     <Compile Include="Transforms\YuiJsMinify.cs" />
