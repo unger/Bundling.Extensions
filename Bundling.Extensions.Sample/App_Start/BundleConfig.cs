@@ -25,10 +25,6 @@ namespace BundlingTest.App_Start
 
             var scriptBundle = new Bundle("~/bundles/js");
             scriptBundle.Include("~/js/lib/jquery-1.9.1.js");
-			/*
-            scriptBundle.Include("~/js/main.ts");
-            scriptBundle.Transforms.Add(new TypeScriptTransformer());
-			*/
 
 #if !DEBUG
             var cssMin = new YuiCssMinify();
