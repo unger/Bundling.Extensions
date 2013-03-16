@@ -3,13 +3,19 @@ Bundling.Extensions
 
 Extensions for Microsoft ASP.NET Web Optimization Framework (System.Web.Optimization)
 
+##Installation
+
+http://nuget.org/packages/Bundling.Extensions/
+
+    Install-Package Bundling.Extensions -Pre
+
 ##Usage
 
 Register bundles as usual
 
-	var cssBundle = new Bundle("~/bundles/css");
+    var cssBundle = new Bundle("~/bundles/css");
     cssBundle.Include("~/css/styles1.css");
-	cssBundle.Include("~/css/styles2.css");
+    cssBundle.Include("~/css/styles2.css");
     // Add transforms here
     BundleTable.Bundles.Add(cssBundle);
 
