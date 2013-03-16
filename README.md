@@ -43,8 +43,6 @@ the timestamp is for the last edited file of the included files
 
 NOTE: Transformation is also applied in debug mode
 
-
-
 #ASP.NET Web Forms controls
 
 It is also possible to use the following controls
@@ -52,16 +50,41 @@ It is also possible to use the following controls
     <Bundling:StyleBundle runat="server" Path="~/bundles/css" />
     <Bundling:ScriptBundle runat="server" Path="~/bundles/js" />
 
-Also this to Web.Config
+Also add this to Web.Config
 
     <system.web>
     <pages>
       <controls>
-        ...
         <add assembly="Bundling.Extensions" namespace="Bundling.Extensions.Controls" tagPrefix="Bundling"/>
       </controls>
     </pages>
     </system.web>
+
+#Use HttpHandler to rewrite bundle urls
+
+If you still like to use the standard way to render the bundles, it is possible to use the included HttpHandler that rewrites the output with a Response.Filter
+
+Example:
+
+    <%: Styles.Render("~/bundles/css") %>
+
+Will generate
+
+    <link href="/bundles/css?v=_NNIf4XxdPCITzjlKPMgZwHMSUsPyxxGaNCIe6mgAkg1test" rel="stylesheet"/>
+
+Register the BundleRewriteModule in Web.Config
+
+    <system.webServer>
+        <modules runAllManagedModulesForAllRequests="true">
+		    <add name="BundleRewriteModule" type="Bundling.Extensions.BundleRewriteModule" preCondition=""/>
+	    </modules>
+    </system.webServer>
+    
+After this the generated link will become
+
+    <link href="/bundles/css/_NNIf4XxdPCITzjlKPMgZwHMSUsPyxxGaNCIe6mgAkg1test" rel="stylesheet"/>
+
+NOTE: You still have to call RouteTable.Routes.AddBundleRoutes() otherwise you will get a 404 error
 
 ##License
 
