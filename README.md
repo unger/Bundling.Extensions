@@ -70,14 +70,14 @@ Example:
 
 Will generate
 
-    <link href="/bundles/css?v=_NNIf4XxdPCITzjlKPMgZwHMSUsPyxxGaNCIe6mgAkg1test" rel="stylesheet"/>
+    <link href="/bundles/css?v=_NNIf4XxdPCITzjlKPMgZwHMSUsPyxxGaNCIe6mgAkg1" rel="stylesheet"/>
 
 Register the BundleRewriteModule in Web.Config
 
     <system.webServer>
         <modules runAllManagedModulesForAllRequests="true">
-		    <add name="BundleRewriteModule" type="Bundling.Extensions.BundleRewriteModule" preCondition=""/>
-	    </modules>
+	    <add name="BundleRewriteModule" type="Bundling.Extensions.BundleRewriteModule" preCondition=""/>
+	</modules>
     </system.webServer>
     
 After this the generated link will become
