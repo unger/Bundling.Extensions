@@ -13,9 +13,16 @@ Register bundles as usual
     // Add transforms here
     BundleTable.Bundles.Add(cssBundle);
 
+#Urls without querystring
+
 To override bundle url generation call this after you added your bundles to the BundleTable.Bundles
 
     RouteTable.Routes.AddBundleRoutes();
+
+To output the custom urls use the following methods
+
+    <%: BundlingHelper.RenderStyles("~/bundles/css") %>
+    <%: BundlingHelper.RenderScripts("~/bundles/js") %>
 
 This will generate urls with a timestamp in the bundle url instead like this
 
@@ -30,6 +37,25 @@ the timestamp is for the last edited file of the included files
 
 NOTE: Transformation is also applied in debug mode
 
+
+
+#ASP.NET Web Forms controls
+
+It is also possible to use the following controls
+
+    <Bundling:StyleBundle runat="server" Path="~/bundles/css" />
+    <Bundling:ScriptBundle runat="server" Path="~/bundles/js" />
+
+Also this to Web.Config
+
+    <system.web>
+    <pages>
+      <controls>
+        ...
+        <add assembly="Bundling.Extensions" namespace="Bundling.Extensions.Controls" tagPrefix="Bundling"/>
+      </controls>
+    </pages>
+    </system.web>
 
 ##License
 
