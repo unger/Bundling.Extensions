@@ -20,6 +20,8 @@ namespace BundlingTest.App_Start
 		{
 			BundleCollection bundles = BundleTable.Bundles;
 
+			bundles.UseCdn = true;
+
 			var cssBundle = new Bundle("~/bundles/css");
 			cssBundle.Include("~/Content/less/bootstrap.less");
 			cssBundle.Include("~/css/main.less");

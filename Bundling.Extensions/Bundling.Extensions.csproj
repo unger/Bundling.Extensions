@@ -69,12 +69,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BundleRewriteModule.cs" />
     <Compile Include="BundlingHelper.cs" />
     <Compile Include="Controls\ScriptBundle.cs" />
     <Compile Include="Controls\StyleBundle.cs" />
     <Compile Include="Handlers\BundleRouteHandler.cs" />
     <Compile Include="Handlers\BundleHttpHandler.cs" />
     <Compile Include="Helpers\Assert.cs" />
+    <Compile Include="Helpers\BundleResponseFilter.cs" />
     <Compile Include="Helpers\VirtualPathResolver.cs" />
     <Compile Include="Helpers\VirtualFileReader.cs" />
     <Compile Include="Renderers\AssetRenderer.cs" />
