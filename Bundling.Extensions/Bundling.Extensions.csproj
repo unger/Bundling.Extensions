@@ -69,6 +69,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BundlingHelper.cs" />
     <Compile Include="Controls\ScriptBundle.cs" />
     <Compile Include="Controls\StyleBundle.cs" />
     <Compile Include="Handlers\BundleRouteHandler.cs" />
