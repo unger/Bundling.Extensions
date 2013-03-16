@@ -35,7 +35,7 @@
 				VirtualPathUtility.ToAppRelative(
 					context.Request.Url.AbsolutePath.Substring(
 						0, context.Request.Url.AbsolutePath.IndexOf(timestamp, StringComparison.Ordinal) - 1));
-			Bundle bundle = BundleTable.Bundles.GetBundleFor(bundleUrl);
+			Bundle bundle = BundleTable.Bundles.GetBundleFor(bundleUrl) ?? BundleTable.Bundles.GetBundleFor(bundleUrl + "/");
 			var bundleContext = new BundleContext(contextBase, BundleTable.Bundles, bundle.Path);
 			BundleResponse bundleResponse = string.IsNullOrEmpty(filepath)
 												? this.GetBundleResponse(bundle, bundleContext)

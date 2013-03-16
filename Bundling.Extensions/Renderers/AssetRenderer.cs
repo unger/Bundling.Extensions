@@ -55,6 +55,10 @@
 					}
 				}
 			}
+			else
+			{
+				stringBuilder.AppendFormat("Could not find bundle with path: {0}", path);
+			}
 
 			return new HtmlString(stringBuilder.ToString());
 		}
