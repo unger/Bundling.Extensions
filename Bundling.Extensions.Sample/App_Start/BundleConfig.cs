@@ -32,7 +32,8 @@ namespace BundlingTest.App_Start
 			modernizrBundle.Include("~/js/lib/modernizr-2.6.2.js");
 
 			var scriptBundle = new Bundle("~/bundles/js");
-			scriptBundle.Include("~/js/lib/jquery-1.9.1.js");
+			scriptBundle.Include("~/js/lib/jquery-1.9.1.min.js");
+			scriptBundle.Include("~/js/lib/bootstrap.min.js");
 
 #if !DEBUG
 			var cssMin = new YuiCssMinify();

@@ -21,6 +21,6 @@
 
     </div>
     
-    <Bundling:ScriptBundle ID="ScriptBundle2" runat="server" Path="~/bundles/js" />
+	<Bundling:ScriptBundle ID="ScriptBundle2" runat="server" Path="~/bundles/js" />
 </body>
 </html>
