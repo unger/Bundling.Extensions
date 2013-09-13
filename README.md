@@ -7,7 +7,7 @@ Extensions for Microsoft ASP.NET Web Optimization Framework (System.Web.Optimiza
 
 http://nuget.org/packages/Bundling.Extensions/
 
-    Install-Package Bundling.Extensions -Pre
+    Install-Package Bundling.Extensions
 
 ##Usage
 
