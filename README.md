@@ -28,7 +28,7 @@ To override bundle url generation call this after you added your bundles to the 
 To output the custom urls use the following methods
 
     <%: BundlingHelper.RenderStyles("~/bundles/css") %>
-    <%: BundlingHelper.RenderScripts("~/bundles/js") %>
+    <%: BundlingHelper.RenderScript("~/bundles/js") %>
 
 This will generate urls with a timestamp in the bundle url instead like this
 
