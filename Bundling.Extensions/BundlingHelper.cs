@@ -13,7 +13,7 @@
 
         public static string RenderScriptUrl(string path)
         {
-            return new ScriptRenderer().Render("{0}", path).ToString().Trim();
+            return new ScriptRenderer().Render("{0}.js", path).ToString().Trim();
         }
 
         public static IHtmlString RenderStyles(string path)
@@ -23,7 +23,7 @@
  
         public static string RenderStylesUrl(string path)
         {
-            return new StylesRenderer().Render("{0}", path).ToString().Trim();
+            return new StylesRenderer().Render("{0}.css", path).ToString().Trim();
         }
     }
 }

@@ -4,7 +4,7 @@
 
 	public class StylesRenderer : BaseRenderer
 	{
-		private const string DefaultTagFormat = "<link href=\"{0}\" rel=\"stylesheet\"/>";
+		private const string DefaultTagFormat = "<link href=\"{0}.css\" rel=\"stylesheet\"/>";
 
 		public StylesRenderer()
 			: base(DefaultTagFormat)
