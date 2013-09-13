@@ -10,6 +10,11 @@
     <Bundling:StyleBundle ID="StyleBundle1" runat="server" Path="~/bundles/css" />
 	
     <Bundling:ScriptBundle ID="ScriptBundle1" runat="server" Path="~/bundles/modernizr" />
+
+	<%: Bundling.Extensions.BundlingHelper.RenderStyles("~/bundles/css") %>
+
+    <link href="<%: Bundling.Extensions.BundlingHelper.RenderStylesUrl("~/bundles/css") %>" rel="stylesheet" />
+
 </head>
 <body>
 	
