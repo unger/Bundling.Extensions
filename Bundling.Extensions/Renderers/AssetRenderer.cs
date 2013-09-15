@@ -63,6 +63,28 @@
 			return new HtmlString(stringBuilder.ToString());
 		}
 
+        public static string RenderUrl(string tagFormat, string path)
+        {
+            var bundle = BundleTable.Bundles.FirstOrDefault(b => b.Path == path);
+            var stringBuilder = new StringBuilder();
+
+            if (bundle != null)
+            {
+                var bundleContext = new BundleContext(Context, BundleTable.Bundles, path);
+
+                var bundlehash = GetTimeStamp(bundle, bundleContext);
+
+                var bundlepath = VirtualPathUtility.ToAbsolute(string.Format("{0}/{1}", path, bundlehash));
+                stringBuilder.Append(string.Format(tagFormat, bundlepath));
+            }
+            else
+            {
+                stringBuilder.AppendFormat("Could not find bundle with path: {0}", path);
+            }
+
+            return stringBuilder.ToString();
+        }
+
 		private static string GetTimeStamp(Bundle bundle, BundleContext bundleContext)
 		{
 			var lastdate = DateTime.MinValue;

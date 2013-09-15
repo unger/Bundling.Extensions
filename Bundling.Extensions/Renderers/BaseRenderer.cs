@@ -30,5 +30,10 @@
 		{
 			return AssetRenderer.Render(tagFormat, path, indent);
 		}
+
+        public string RenderUrl(string tagFormat, string path)
+        {
+            return AssetRenderer.RenderUrl(tagFormat, path);
+        }
 	}
 }

@@ -19,6 +19,11 @@ Register bundles as usual
     // Add transforms here
     BundleTable.Bundles.Add(cssBundle);
 
+To be sure to get correct Content-Type, it is possible to use
+
+    var cssBundle = new CssBundle("~/bundles/css");
+    var jsBundle = new JsBundle("~/bundles/js");	
+	
 #Urls without querystring
 
 To override bundle url generation call this after you added your bundles to the BundleTable.Bundles
