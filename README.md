@@ -37,7 +37,7 @@ To output the custom urls use the following methods
 
 This will generate urls with a timestamp in the bundle url instead like this
 
-    <link href="/bundles/css/20130315191550" rel="stylesheet"/>
+    <link href="/bundles/css/20130315191550.css" rel="stylesheet"/>
 
 and in debug mode (BundleTable.EnableOptimizations = false)
 
