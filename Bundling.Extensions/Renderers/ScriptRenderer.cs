@@ -4,10 +4,11 @@
 
 	public class ScriptRenderer : BaseRenderer
 	{
-		private const string DefaultTagFormat = "<script src=\"{0}.js\"></script>";
+		private const string DefaultTagFormat = "<script src=\"{0}\"></script>";
+        private const string OptimizedExtension = ".js";
 
 		public ScriptRenderer()
-			: base(DefaultTagFormat)
+            : base(DefaultTagFormat, OptimizedExtension)
 		{
 		}
 	}

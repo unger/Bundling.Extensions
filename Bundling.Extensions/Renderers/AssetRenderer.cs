@@ -25,7 +25,7 @@
 			}
 		}
 
-		public static IHtmlString Render(string tagFormat, string path, int indent)
+		public static IHtmlString Render(string tagFormat, string optimizedExtension, string path, int indent)
 		{
 			var bundle = BundleTable.Bundles.FirstOrDefault(b => b.Path == path);
 			var stringBuilder = new StringBuilder();
@@ -38,7 +38,7 @@
 
 				if (BundleTable.EnableOptimizations)
 				{
-					var bundlepath = VirtualPathUtility.ToAbsolute(string.Format("{0}/{1}", path, bundlehash));
+                    var bundlepath = VirtualPathUtility.ToAbsolute(string.Format("{0}/{1}{2}", path, bundlehash, optimizedExtension));
 					stringBuilder.Append(string.Format(tagFormat, bundlepath));
 					stringBuilder.Append(Environment.NewLine);
 				}
@@ -63,7 +63,7 @@
 			return new HtmlString(stringBuilder.ToString());
 		}
 
-        public static string RenderUrl(string tagFormat, string path)
+        public static string RenderUrl(string path, string extension)
         {
             var bundle = BundleTable.Bundles.FirstOrDefault(b => b.Path == path);
             var stringBuilder = new StringBuilder();
@@ -74,8 +74,8 @@
 
                 var bundlehash = GetTimeStamp(bundle, bundleContext);
 
-                var bundlepath = VirtualPathUtility.ToAbsolute(string.Format("{0}/{1}", path, bundlehash));
-                stringBuilder.Append(string.Format(tagFormat, bundlepath));
+                var bundlepath = VirtualPathUtility.ToAbsolute(string.Format("{0}/{1}{2}", path, bundlehash, extension));
+                stringBuilder.Append(bundlepath);
             }
             else
             {
