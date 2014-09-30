@@ -30,6 +30,8 @@ To override bundle url generation call this after you added your bundles to the 
 
     RouteTable.Routes.AddBundleRoutes();
 
+**NOTE:** Depending on your other routes the call to AddBundleRoutes might need to be called before registering your own routes
+
 To output the custom urls use the following methods
 
     <%: BundlingHelper.RenderStyles("~/bundles/css") %>
@@ -46,7 +48,7 @@ and in debug mode (BundleTable.EnableOptimizations = false)
 
 the timestamp is for the last edited file of the included files
 
-NOTE: Transformation is also applied in debug mode
+**NOTE:** Transformation is also applied in debug mode
 
 #ASP.NET Web Forms controls
 
