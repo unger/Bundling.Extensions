@@ -15,15 +15,13 @@
 	using dotless.Core.Importers;
 	using dotless.Core.Loggers;
 	using dotless.Core.Parser;
+	using dotless.Core.Plugins;
 
-	public class LessTransform : IBundleTransform
+    public class LessTransform : IBundleTransform
 	{
 		public void Process(BundleContext context, BundleResponse bundle)
 		{
 			context.HttpContext.Response.Cache.SetLastModifiedFromFileDependencies();
-
-			var lessParser = new Parser();
-			ILessEngine lessEngine = this.CreateLessEngine(lessParser);
 
 			var content = new StringBuilder();
 
@@ -31,6 +29,9 @@
 
 			foreach (var bundleFile in bundle.Files)
 			{
+                var lessParser = new Parser();
+                ILessEngine lessEngine = this.CreateLessEngine(lessParser);
+
 				bool foundMinimizedVersion = false;
 				bundleFiles.Add(bundleFile);
 
@@ -65,7 +66,8 @@
 
 					using (var reader = new StreamReader(VirtualPathProvider.OpenFile(bundleFile.VirtualFile.VirtualPath)))
 					{
-						content.Append(lessEngine.TransformToCss(reader.ReadToEnd(), bundleFile.VirtualFile.VirtualPath));
+					    var fileContent = reader.ReadToEnd();
+                        content.Append(lessEngine.TransformToCss(fileContent, bundleFile.VirtualFile.VirtualPath));
 						content.AppendLine();
 
 						bundleFiles.AddRange(this.GetFileDependencies(lessParser).Select(f => new BundleFile(f.VirtualPath, f)));
@@ -97,8 +99,6 @@
 			{
 				yield return HostingEnvironment.VirtualPathProvider.GetFile(pathResolver.GetFullPath(importPath));
 			}
-
-			lessParser.Importer.Imports.Clear();
 		}
 
 		private dotless.Core.Input.IPathResolver GetPathResolver(Parser lessParser)

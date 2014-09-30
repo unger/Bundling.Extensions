@@ -1,31 +1,21 @@
 ﻿<%@ Page Title="Home Page" Language="C#" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="BundlingTest.Default" %>
+<%@ Register Src="~/Units/BootstrapDemo.ascx" TagPrefix="uc1" TagName="BootstrapDemo" %>
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="utf-8" />
-    <title>Test</title>
+    <title>No Bundling Demo</title>
 
-	<%: Styles.Render("~/bundles/css") %>
+    <link href="/Content/bootstrap/bootstrap.less" rel="stylesheet" />
+    <link href="/Content/bootstrap/theme.less" rel="stylesheet" />
+    <link href="/Content/main.less" rel="stylesheet" />
 
-    <Bundling:StyleBundle ID="StyleBundle1" runat="server" Path="~/bundles/css" />
-	
-    <Bundling:ScriptBundle ID="ScriptBundle1" runat="server" Path="~/bundles/modernizr" />
-
-	<%: Bundling.Extensions.BundlingHelper.RenderStyles("~/bundles/css") %>
-
-    <link href="<%: Bundling.Extensions.BundlingHelper.RenderStylesUrl("~/bundles/css") %>" rel="stylesheet" />
-
+    <script src="/Scripts/modernizr-2.8.3.js"></script>
 </head>
 <body>
-	
-
-    <div class="container">
-
-      <h1>Bootstrap starter template</h1>
-      <p>Use this document as a way to quick start any new project.<br> All you get is this message and a barebones HTML document.</p>
-
-    </div>
+    <uc1:BootstrapDemo runat="server" id="BootstrapDemo" />
     
-	<Bundling:ScriptBundle ID="ScriptBundle2" runat="server" Path="~/bundles/js" />
+    <script src="/Scripts/jquery-2.1.1.js"></script>
+    <script src="/Scripts/bootstrap.js"></script>
+    <script src="/Scripts/holder.js"></script>
 </body>
 </html>

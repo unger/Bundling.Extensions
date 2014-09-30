@@ -1,10 +1,10 @@
-﻿using BundlingTest.App_Start;
+﻿using BundlingTest;
 
 using WebActivatorEx;
 
 [assembly: PostApplicationStartMethod(typeof(BundleConfig), "RegisterBundles")]
 
-namespace BundlingTest.App_Start
+namespace BundlingTest
 {
 	using System.Web.Optimization;
 	using System.Web.Routing;
@@ -14,8 +14,6 @@ namespace BundlingTest.App_Start
 
 	public class BundleConfig
 	{
-		#region Public Methods and Operators
-
 		public static void RegisterBundles()
 		{
 			BundleCollection bundles = BundleTable.Bundles;
@@ -23,17 +21,19 @@ namespace BundlingTest.App_Start
 			bundles.UseCdn = true;
 
 			var cssBundle = new Bundle("~/bundles/css");
-			cssBundle.Include("~/Content/less/bootstrap.less");
-			cssBundle.Include("~/css/main.less");
-			cssBundle.Transforms.Add(new LessTransform());
+            cssBundle.Include("~/Content/bootstrap/bootstrap.less");
+            cssBundle.Include("~/Content/main.less");
+            cssBundle.Include("~/Content/bootstrap/theme.less");
+            cssBundle.Transforms.Add(new LessTransform());
 			cssBundle.Transforms.Add(new CssInlineImagesTransform());
 
 			var modernizrBundle = new Bundle("~/bundles/modernizr");
-			modernizrBundle.Include("~/js/lib/modernizr-2.6.2.js");
+            modernizrBundle.Include("~/Scripts/modernizr-2.8.3.js");
 
 			var scriptBundle = new Bundle("~/bundles/js");
-			scriptBundle.Include("~/js/lib/jquery-1.9.1.min.js");
-			scriptBundle.Include("~/js/lib/bootstrap.min.js");
+            scriptBundle.Include("~/Scripts/jquery-2.1.1.js");
+            scriptBundle.Include("~/Scripts/bootstrap.js");
+            scriptBundle.Include("~/Scripts/holder.js");
 
 #if !DEBUG
 			var cssMin = new YuiCssMinify();
@@ -51,7 +51,5 @@ namespace BundlingTest.App_Start
 
 			RouteTable.Routes.AddBundleRoutes();
 		}
-
-		#endregion
 	}
 }

@@ -13,30 +13,12 @@ namespace BundlingTest {
     public partial class Default {
         
         /// <summary>
-        /// StyleBundle1 control.
+        /// BootstrapDemo control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Bundling.Extensions.Controls.StyleBundle StyleBundle1;
-        
-        /// <summary>
-        /// ScriptBundle1 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::Bundling.Extensions.Controls.ScriptBundle ScriptBundle1;
-        
-        /// <summary>
-        /// ScriptBundle2 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::Bundling.Extensions.Controls.ScriptBundle ScriptBundle2;
+        protected global::BundlingTest.Units.BootstrapDemo BootstrapDemo;
     }
 }
